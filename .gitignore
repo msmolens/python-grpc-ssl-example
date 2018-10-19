@@ -1,0 +1,7 @@
+.tox/
+.vscode/
+
+*.py[cod]
+
+server.crt
+server.key

@@ -1,0 +1,198 @@
+syntax = "proto3";
+
+package shopping_list;
+
+// Server interface to manage a shopping list.
+//
+// Note: Names generally follow this convention:
+// https://cloud.google.com/apis/design/naming_convention
+service ShoppingListService {
+  // Create a new shopping list.
+  //
+  // If the shopping list name is empty, returns `INVALID_ARGUMENT`.
+  rpc CreateShoppingList(CreateShoppingListRequest) returns (ShoppingList) {}
+
+  // Update properties of a shopping list.
+  //
+  // If the shopping list name is empty, returns `INVALID_ARGUMENT`.
+  // If a shopping list with the specified ID doesn't exist, returns `NOT_FOUND`.
+  rpc UpdateShoppingList(UpdateShoppingListRequest) returns (ShoppingList) {}
+
+  // Delete a shopping list.
+  //
+  // If a shopping list with the specified ID doesn't exist, returns `NOT_FOUND`.
+  rpc DeleteShoppingList(DeleteShoppingListRequest) returns (DeleteShoppingListResponse) {}
+
+  // List shopping lists.
+  //
+  // When a value for the `filter` parameter is provided, only shopping lists whose
+  // name includes the filter value are returned.
+  //
+  // Note: A robust implementation would handle paging.
+  rpc ListShoppingLists(ListShoppingListsRequest) returns (ListShoppingListsResponse) {}
+
+  // List shopping lists, returning results as a stream.
+  //
+  // When a value for the `filter` parameter is provided, only shopping lists
+  // whose name includes the filter value are returned.
+  rpc ListShoppingListsStream(ListShoppingListsStreamRequest) returns (stream ShoppingList) {}
+
+  // Add an item to a shopping list.
+  rpc AddItem(AddItemRequest) returns (AddItemResponse) {}
+
+  // Remove an item from a shopping list.
+  rpc RemoveItem(RemoveItemRequest) returns (RemoveItemResponse) {}
+
+  // Set whether an item on a shopping list is checked.
+  rpc SetItemChecked(SetItemCheckedRequest) returns (SetItemCheckedResponse) {}
+
+  // List items on a shopping list.
+  //
+  // Note: A robust implementation would handle paging.
+  rpc ListItems(ListItemsRequest) returns (ListItemsResponse) {}
+
+  // List items on a shopping list, returning results as a stream.
+  rpc ListItemsStream(ListItemsStreamRequest) returns (stream Item) {}
+}
+
+//
+// Resources
+//
+
+// Shopping list resource.
+message ShoppingList {
+  // The ID of the shopping list; populated upon creation.
+  string id = 1;
+  // The name of the shopping list.
+  string name = 2;
+  // The description of the shopping list.
+  string description = 3;
+}
+
+// Shopping list item resource.
+message Item {
+  // The ID of the item; populated upon creation.
+  string id = 1;
+  // The name of the item.
+  string name = 2;
+  // The description of the item.
+  string description = 3;
+  // Whether the item is checked.
+  bool checked = 4;
+}
+
+//
+// Requests
+//
+
+// Request for the `CreateShoppingList` method.
+message CreateShoppingListRequest {
+  // The shopping list to create.
+  ShoppingList shopping_list = 1;
+}
+
+// Request for the `UpdateShoppingList` method.
+message UpdateShoppingListRequest {
+  // The updated shopping list.
+  ShoppingList shopping_list = 1;
+}
+
+// Request for the `DeleteShoppingList` method.
+message DeleteShoppingListRequest {
+  // The ID of the shopping list to delete.
+  string shopping_list_id = 1;
+}
+
+// Request for the `ListShoppingLists` method.
+message ListShoppingListsRequest {
+  // The filter expression.
+  string filter = 1;
+}
+
+// Request for the `ListShoppingListsStream` method.
+message ListShoppingListsStreamRequest {
+  // The filter expression.
+  string filter = 1;
+}
+
+// Request for the `AddItem` method.
+message AddItemRequest {
+  // The ID of the shopping list to which to add the item.
+  string shopping_list_id = 1;
+  // The item.
+  Item item = 2;
+}
+
+// Request for the `RemoveItem` method.
+message RemoveItemRequest {
+  // The ID of the shopping list from which to remove the item.
+  string shopping_list_id = 1;
+  // The ID of the item.
+  string item_id = 2;
+}
+
+// Request for the `SetItemChecked` method.
+message SetItemCheckedRequest {
+  // The ID of the shopping list of the item.
+  string shopping_list_id = 1;
+  // The ID of the item.
+  string item_id = 2;
+  // Whether the item is checked.
+  bool checked = 3;
+}
+
+// Request for the `ListItems` method.
+message ListItemsRequest {
+  // The ID of the shopping list.
+  string shopping_list_id = 1;
+  // The filter expression.
+  string filter = 2;
+}
+
+// Request for the `ListItemsStream` method.
+message ListItemsStreamRequest {
+  // The ID of the shopping list.
+  string shopping_list_id = 1;
+  // The filter expression.
+  string filter = 2;
+}
+
+//
+// Responses
+//
+
+// Response for the `DeleteShoppingList` method.
+message DeleteShoppingListResponse {
+  // The deleted shopping list.
+  ShoppingList shopping_list = 1;
+}
+
+// Response for the `ListShoppingLists` method.
+message ListShoppingListsResponse {
+  // The shopping lists that match the request.
+  repeated ShoppingList shopping_lists = 1;
+}
+
+// Response for the `AddItem` method.
+message AddItemResponse {
+  // The item to add.
+  Item item = 1;
+}
+
+// Response for the `RemoveItem` method.
+message RemoveItemResponse {
+  // The removed item.
+  Item item = 1;
+}
+
+// Response for the `SetItemChecked` method.
+message SetItemCheckedResponse {
+  // The updated item.
+  Item item = 1;
+}
+
+// Response for the `ListItems` method.
+message ListItemsResponse {
+  // The items that match the request.
+  repeated Item items = 1;
+}
