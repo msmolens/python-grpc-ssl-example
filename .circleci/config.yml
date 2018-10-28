@@ -31,3 +31,41 @@ jobs:
       - store_artifacts:
           path: test-reports
           destination: test-reports
+  integration_test:
+    docker:
+      - image: circleci/python:3.6.1
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Set up virtualenv
+      - run:
+          name: set up virtualenv
+          command: |
+            python3 -m venv ~/venv
+            . ~/venv/bin/activate
+            pip install --upgrade setuptools pip
+            pip install -r requirements.txt
+
+      # Run server
+      - run:
+          name: run server
+          command: |
+            . ~/venv/bin/activate
+            ./shopping_list_server.py --no-use-tls
+          background: true
+
+      # Run client
+      - run:
+          name: run client
+          command: |
+            . ~/venv/bin/activate
+            ./shopping_list_test_client.py --no-use-tls
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - build
+      - integration_test
