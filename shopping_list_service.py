@@ -49,7 +49,7 @@ class ShoppingListService(ShoppingListServiceServicer):
 
     def _filteredItems(self, items, filter=None):
         """
-        Return generate expression of items with names that match the specified filter.
+        Return generator expression of items with names that match the specified filter.
         """
         return (
             item

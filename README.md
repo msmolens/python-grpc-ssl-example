@@ -30,18 +30,22 @@ Install the required runtime dependencies:
 python -m pip install -r requirements.txt
 ```
 
+Alternatively, if using Docker, install:
+- [Docker Engine](https://docs.docker.com/engine/) >= 18.02.0
+- [Docker Compose](https://docs.docker.com/compose/) >= 18.02.0
+
 ## Testing
 
 The [test](test) directory contains unit tests runnable with
 [pytest](https://pytest.org).
 
-To automatically test on multiple versions of Python run `tox`; see
-https://tox.readthedocs.io/. [flake8](http://flake8.pycqa.org/) is used to check
-the code style.
+To automatically test on multiple versions of Python, install and run
+[`tox`](https://tox.readthedocs.io/). [Flake8](http://flake8.pycqa.org/) is used
+to check the code style.
 
 ## Usage
 
-A test client is provided that exercises some methods of the server.
+### Run the server
 
 Run the server with the following command:
 
@@ -49,7 +53,20 @@ Run the server with the following command:
 ./shopping_list_server.py --no-use-tls
 ```
 
-Run the client--in a different terminal--with the following command:
+Alternatively, if using Docker, run:
+```bash
+docker-compose up -d --build
+```
+
+Later, stop the Docker container with:
+```bash
+docker-compose down
+```
+
+### Run the test client
+
+A test client is provided that exercises some methods of the server. Run the
+test client with the following command:
 
 ```bash
 ./shopping_list_test_client.py --no-use-tls
@@ -57,6 +74,16 @@ Run the client--in a different terminal--with the following command:
 
 Note that SSL support is enabled by default; the `--no-use-tls` option disables
 it.
+
+Alternatively, if using Docker, run:
+```bash
+docker run -it --rm \
+    --network container:python-grpc-ssl-example-server \
+    python-grpc-ssl-example:latest \
+    /opt/app/shopping_list_test_client.py --no-use-tls
+```
+
+### Additional options
 
 Pass the `--help` argument when running the client and server to see additional
 options, including those for host and port.
