@@ -1,0 +1,9 @@
+version: "3.6"
+services:
+  server:
+    build: .
+    image: python-grpc-ssl-example:latest
+    container_name: python-grpc-ssl-example-server
+    entrypoint: python /opt/app/shopping_list_server.py --no-use-tls
+    ports:
+    - "8443:8443"
